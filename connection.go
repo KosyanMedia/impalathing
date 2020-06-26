@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/KosyanMedia/impalathing/services/beeswax"
+	impala "github.com/KosyanMedia/impalathing/services/impalaservice"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/koblas/impalathing/services/beeswax"
-	impala "github.com/koblas/impalathing/services/impalaservice"
 )
 
 type Options struct {
