@@ -26,7 +26,7 @@ type Connection struct {
 	options   Options
 }
 
-func Connect(host string, port int, options Options, useKerberos bool) (*Connection, error) {
+func Connect(host string, port int, options Options, saslConfiguration map[string]string) (*Connection, error) {
 	socket, err := thrift.NewTSocketTimeout(fmt.Sprintf("%s:%d", host, port), 10000*time.Millisecond)
 
 	if err != nil {
@@ -34,11 +34,9 @@ func Connect(host string, port int, options Options, useKerberos bool) (*Connect
 	}
 
 	var transport thrift.TTransport
-	if useKerberos {
-		saslConfiguration := map[string]string{
-			"service": "impala",
-		}
-		transport, err = NewTSaslTransport(socket, host, "GSSAPI", saslConfiguration)
+	if _, ok := saslConfiguration["mechanismName"]; ok {
+		saslConfiguration["service"] = "impala"
+		transport, err = NewTSaslTransport(socket, host, saslConfiguration["mechanismName"], saslConfiguration)
 		if err != nil {
 			return nil, err
 		}
